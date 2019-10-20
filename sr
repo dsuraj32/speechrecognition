@@ -1,0 +1,41 @@
+import wolframalpha
+import wikipedia
+from tkinter import *
+import speech_recognition as sr
+
+while True:
+    x=sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Speak..")
+        audio=x.listen(source)
+        try:
+            print("Recognizing....")
+            text=x.recognize_google(audio)
+            print(text)
+            if text == "stop":
+             break;
+            else:
+                window = Tk()
+                window.geometry("800x800")
+                try:
+                    #print("From Wolframalpha")
+                    app_id = "95T5U4-6YA7TQ833G"
+                    client = wolframalpha.Client(app_id)
+                    res = client.query(text)
+                    answer = next(res.results).text
+
+                    label1 = Label(window,justify=LEFT, compounf=CENTER,padx = 10,text=answer,font='15 times bold')
+                    label1.pack()
+                    window.after(5000,lambda:window.destroy())
+                    mainloop()
+                except Exception as e:
+                    answer = wikipedia.summary(text)
+                    #print("From Wikipedia")
+                    label1 = Label(window,justify=LEFT, compounf=CENTER,padx = 10,text=answer,font='15 times bold')
+                    label1.pack()
+                    window.after(5000,lambda:window.destroy())
+                    mainloop()
+        except Exception as e:
+                print(e)
+                answer = "Speak again !!!"
+                print(answer)
